@@ -11,8 +11,8 @@ const getHTML = async url => {
 };
 
 const Goodreads = async () => {
-  const url = `https://www.goodreads.com/review/list?v=2 &id=${process.env.GOODREAD_ID}&shelf=to-read&key=${process.env.GOODREAD_KEY}&sort=avg_rating&per_page=200&page=1`;
-  console.log(url);
+  const url = `https://www.goodreads.com/review/list?v=2&id=${process.env.GOODREAD_ID}&shelf=to-read&key=${process.env.GOODREAD_KEY}&sort=position&per_page=200&page=1`;
+  //console.log(url);
 
   const res = await getHTML(url);
 

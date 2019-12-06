@@ -1,7 +1,8 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-const bookDepositoryURL = "https://www.bookdepository.com/dealsAndOffers/promo/id";
+const bookDepositoryURL =
+  "https://www.bookdepository.com/dealsAndOffers/promo/id";
 
 /**
  * Use axios to get the data of given URL
@@ -49,8 +50,8 @@ const getPageBooks = async url => {
     return [];
   }
   const $ = cheerio.load(html);
-// Array for storing all the books across the pages
-const bookList = new Array();
+  // Array for storing all the books across the pages
+  const bookList = new Array();
 
   $(".book-item").each((i, el) => {
     const isbn = $(el)
@@ -71,7 +72,7 @@ const bookList = new Array();
       .text()
       .replace(/\s\s+/g, "");
 
-    const book = { ISBN: isbn, Title: title, Price: price };
+    const book = { isbn: isbn, title: title, price: price };
     bookList.push(book);
   });
 
@@ -81,16 +82,18 @@ const bookList = new Array();
 const Books = async () => {
   const url = `${bookDepositoryURL}/1762`;
   const pages = await getPageCount(url);
-  console.log(`Pages: ${pages}`);
+  //console.log(`Pages: ${pages}`);
 
   let books = [];
   // Loop over each page and retrieve the books on each page
   for (let index = 1; index <= pages; index++) {
     const pageBooks = await getPageBooks(`${url}?page=${index}`);
-    books.push(pageBooks);
+    pageBooks.forEach(book => {
+      books.push(book);
+    });
   }
 
   return books;
 };
 
-module.exports =  Books ;
+module.exports = Books;
