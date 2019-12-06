@@ -2,8 +2,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 const bookDepositoryURL =
-  "https://www.bookdepository.com/dealsAndOffers/promo/id";
-
+  //"https://www.bookdepository.com/dealsAndOffers/promo/id";
+  "https://www.bookdepository.com";
 /**
  * Use axios to get the data of given URL
  *
@@ -11,6 +11,31 @@ const bookDepositoryURL =
  */
 const getHTML = async url => {
   return await axios.get(url);
+};
+
+/**
+ * Find all the pages with bargains
+ *
+ * @returns {Array} Array of Urls for bargain prices
+ */
+const getBargains = async () => {
+  const url = `${bookDepositoryURL}/bargain-shop`;
+  const res = await getHTML(url);
+
+  const status = res.status;
+  const html = res.data;
+
+  if (status !== 200) {
+    return [];
+  }
+  const $ = cheerio.load(html);
+
+  let bargainURLs = [];
+  $(".promo-link").each((i, el) => {
+    const link = $(el).attr("href");
+    bargainURLs.push(`${bookDepositoryURL}${link}`);
+  });
+  return bargainURLs;
 };
 
 /**
@@ -80,19 +105,21 @@ const getPageBooks = async url => {
 };
 
 const Books = async () => {
-  const url = `${bookDepositoryURL}/1762`;
-  const pages = await getPageCount(url);
-  //console.log(`Pages: ${pages}`);
+  const urls = await getBargains(); //`${bookDepositoryURL}/1762`;
 
   let books = [];
-  // Loop over each page and retrieve the books on each page
-  for (let index = 1; index <= pages; index++) {
-    const pageBooks = await getPageBooks(`${url}?page=${index}`);
-    pageBooks.forEach(book => {
-      books.push(book);
-    });
-  }
+  urls.forEach(async url => {
+    const pages = await getPageCount(url);
+    //console.log(`Pages: ${pages}`);
 
+    // Loop over each page and retrieve the books on each page
+    for (let index = 1; index <= pages; index++) {
+      const pageBooks = await getPageBooks(`${url}?page=${index}`);
+      pageBooks.forEach(book => {
+        books.push(book);
+      });
+    }
+  });
   return books;
 };
 
