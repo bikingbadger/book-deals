@@ -1,7 +1,13 @@
 require("dotenv").config();
-const {Books} = require("./bookrepository");
+const Goodreads = require("./goodreads");
+const Books = require("./bookrepository");
 
 (async () => {
-  const books = await Books();
-  console.log(books);
+  try {
+    const books = await Books();
+    const myBooks = await Goodreads();
+    console.log(myBooks);
+  } catch (error) {
+    console.log(error);
+  }
 })();

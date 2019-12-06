@@ -78,7 +78,7 @@ const bookList = new Array();
   return bookList;
 };
 
-const getBooks = async () => {
+const Books = async () => {
   const url = `${bookDepositoryURL}/1762`;
   const pages = await getPageCount(url);
   console.log(`Pages: ${pages}`);
@@ -93,4 +93,4 @@ const getBooks = async () => {
   return books;
 };
 
-module.exports = { Books: getBooks };
+module.exports =  Books ;
