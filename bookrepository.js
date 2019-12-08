@@ -1,9 +1,8 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-const bookDepositoryURL =
-  //"https://www.bookdepository.com/dealsAndOffers/promo/id";
-  "https://www.bookdepository.com";
+const bookDepositoryURL = "https://www.bookdepository.com";
+
 /**
  * Use axios to get the data of given URL
  *
@@ -50,7 +49,7 @@ const getPageCount = async url => {
   const html = res.data;
 
   if (status !== 200) {
-    return -1;
+    return;
   }
   const $ = cheerio.load(html);
 
@@ -110,7 +109,6 @@ const Books = async () => {
   let books = [];
   urls.forEach(async url => {
     const pages = await getPageCount(url);
-    //console.log(`Pages: ${pages}`);
 
     // Loop over each page and retrieve the books on each page
     for (let index = 1; index <= pages; index++) {

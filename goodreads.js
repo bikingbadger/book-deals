@@ -12,7 +12,6 @@ const getHTML = async url => {
 
 const Goodreads = async () => {
   const url = `https://www.goodreads.com/review/list?v=2&id=${process.env.GOODREAD_ID}&shelf=to-read&key=${process.env.GOODREAD_KEY}&sort=position&per_page=200&page=1`;
-  //console.log(url);
 
   const res = await getHTML(url);
 
@@ -28,7 +27,15 @@ const Goodreads = async () => {
     const reviews = jsonResult["GoodreadsResponse"]["reviews"][0]["review"];
 
     for (var i = 0; i < reviews.length; i++) {
-      books.push(reviews[i]["book"]);
+      // Extract the data from the xml
+      const isbn = reviews[i]["book"][0]["isbn13"][0];
+      const title = reviews[i]["book"][0]["title_without_series"][0];
+
+      // Create a book object
+      const book = { isbn: isbn, title: title, price: '₪0' };
+
+      // Push the object to the array
+      books.push(book);
     }
   });
   return books;

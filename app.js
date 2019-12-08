@@ -7,21 +7,13 @@ const Books = require("./bookrepository");
     const books = await Books();
     const myBooks = await Goodreads();
 
-    myBooks.forEach(book => {
-      const isbn = book[0].isbn13[0];
-      const title = book[0].title[0];
-      if (typeof isbn === "string") {
-        const found = books.find(book => {
-          return isbn === book.isbn;
-        });
-
-        if (found) {
-          console.log(isbn);
-          console.log(title);
-          console.log("BINGO!!!!!!");
-        }
-      }
+    let deals = [];
+    myBooks.forEach(myBook => {
+      if (myBook.isbn.nil) return;
+      const found = books.find(book => myBook.isbn === book.isbn);
+      found ? deals.push(found) : false;
     });
+    console.log(deals);
   } catch (error) {
     console.log(error);
   }
